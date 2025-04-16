@@ -18,9 +18,11 @@ def create_app():
     from .auth import auth as auth_blueprint
     from .routes import main as main_blueprint
     from .security.insecure import insecure as insecure_blueprint
+    from .security.secure import secure as secure_blueprint
 
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(main_blueprint)
     app.register_blueprint(insecure_blueprint)
+    app.register_blueprint(secure_blueprint)
 
     return app

@@ -11,7 +11,7 @@ def insecure_login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        #SELECT * FROM user WHERE username = '' OR 1=1 -- AND password = '{password}'
+        # SELECT * FROM user WHERE username = '' OR 1=1 -- AND password = '{password}'
         query = f"SELECT * FROM user WHERE username = '{username}' AND password = '{password}'"
         result = db.session.execute(query).fetchone()
 
@@ -23,13 +23,13 @@ def insecure_login():
 
     return render_template("insecure_login.html", message=message)
 
-@insecure.route("/insecure-notes", methods=["GET", "POST"])
-def insecure_notes():
+@insecure.route("/brute-login", methods=["GET", "POST"])
+def brute_login():
     message = ""
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        #SELECT * FROM user WHERE username = '' OR 1=1 -- AND password = '{password}'
+        # SELECT * FROM user WHERE username = '' OR 1=1 -- AND password = '{password}'
         query = f"SELECT * FROM user WHERE username = '{username}' AND password = '{password}'"
         result = db.session.execute(query).fetchone()
 
@@ -42,3 +42,13 @@ def insecure_notes():
     return render_template("insecure_login.html", message=message)
 
 
+@insecure.route("/insecure-notes", methods=["GET", "POST"])
+def insecure_notes():
+    notes = []
+    if request.method == "POST":
+        title = request.form["title"]
+        content = request.form["content"]
+
+        notes.append({"title": title, "content": content})
+
+    return render_template("insecure_notes.html", notes=notes)

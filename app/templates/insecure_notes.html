@@ -1,0 +1,13 @@
+<h3>Zafiyetli Not Ekleme (Stored XSS)</h3>
+<form method="post">
+    <input name="title" placeholder="Not Başlığı">
+    <textarea name="content" placeholder="İçerik yazın..."></textarea>
+    <button>Kaydet</button>
+</form>
+<ul>
+    {% for note in notes %}
+
+    <li><strong>{{note.title|safe}}</strong>:{{note.content|safe}} </li>
+
+    {% endfor %}
+</ul>

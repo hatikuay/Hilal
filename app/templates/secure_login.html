@@ -1,7 +1,11 @@
-<h3>Zafiyetli Giriş (SQL Injection Test)</h3>
+<h3>Güvenli Giriş</h3>
 <form method="post">
     <input name="username" placeholder="Kullanıcı Adı">
     <input name="password" type="password" placeholder="Şifre">
     <button type="submit">Giriş Yap</button>
 </form>
-<p style="color : red">{{ message }}</p>
+{% with messages = get_flashed_message() %}
+    {%if message%} 
+        <ul> <li> {{messages[0]}}</li> </ul>
+    {%endif%}
+{% endwith%}

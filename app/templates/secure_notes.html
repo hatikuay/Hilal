@@ -1,0 +1,13 @@
+<h3>Güvenli Not Ekleme</h3>
+<form method="post">
+    <input name="title" placeholder="Not Başlığı">
+    <textarea name="content" placeholder="İçerik yazın..."></textarea>
+    <button>Kaydet</button>
+</form>
+<ul>
+    {% for note in notes %}
+
+    <li><strong>{{note.title}}</strong>:{{note.content}} </li>
+
+    {% endfor %}
+</ul>
