@@ -7,9 +7,9 @@ services:
       - "5000:5000"
     depends_on:
       - db
-    entrypoint:
-      - SECRET_KEY= super-secret-key
-      - DATABASE_URL, postgresql://postgres:postgres@db:5432/mydatabase
+    environment:
+      - SECRET_KEY=super-secret-key
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydatabase
     volumes:
       - .:/app
     command: python run.py
@@ -25,5 +25,6 @@ services:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
 volumes:
-  pgdata:
+  pgdata: {}

@@ -1,9 +1,9 @@
 from flask import Flask
-from flask_sqlalchemy import SQLALchemy
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import Config
 
-db = SQLALchemy()
+db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 
@@ -17,8 +17,10 @@ def create_app():
 
     from .auth import auth as auth_blueprint
     from .routes import main as main_blueprint
+    from .security.insecure import insecure as insecure_blueprint
 
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(main_blueprint)
-    
+    app.register_blueprint(insecure_blueprint)
+
     return app
