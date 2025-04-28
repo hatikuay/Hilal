@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, flash, url_for
 from flask_login import login_required, current_user
 from .models import User, Note, Role
+from .decorators import roles_required
 from . import db
 
 main = Blueprint("main", __name__)
@@ -28,11 +29,13 @@ def dashboard():
 
 @main.route("/admin")
 @login_required
+@roles_required(Role.ADMIN)
 def admin_panel():
 
     if current_user.role != Role.ADMIN:
         flash("Yetkisiz erişim!")
-        return redirect("/dashboard")
+        #return redirect("/dashboard")
+        return redirect(url_for("main.dashboard"))
 
     users = User.query.all()
     return render_template("admin_panel.html", users=users)

@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 
 class Config:
@@ -7,3 +8,17 @@ class Config:
         "DATABASE_URL", "postgresql://postgres:postgres@db:5432/mydatabase"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # === Güvenli Çerez Ayarları ===
+    SESSION_COOKIE_SECURE = True # Sadece HTTPS üzerinde gönderilsin
+    SESSION_COOKIE_HTTPONLY = True # JavaScript’in document.cookie ile erişimi engelle
+    SESSION_COOKIE_SAMESITE = "Lax" # CSRF riskini azaltmak için
+    
+    REMEMBER_COOKIE_SECURE = True 
+    REMEMBER_COOKIE_HTTPONLY = True 
+    REMEMBER_COOKIE_SAMESITE = "Lax"
+    
+    # === Oturum Süresi ===
+    # session.permanent=True yapıldığında geçerli olacak maksimum süre
+    PERMANENT_SESSION_LIFETIME = timedelta(miutes=30)
+
