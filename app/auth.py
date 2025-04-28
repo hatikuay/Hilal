@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, request, flash, url_for
+from flask import Blueprint, render_template, redirect, request, flash, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
 from .models import User
@@ -19,7 +19,11 @@ def login():
         password = request.form["password"]
         user: User = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
+            # 1) Flask-Login ile login et
             login_user(user)
+            # 2) Oturumu permanent yap
+            session.permanent = True
+            
             return redirect(url_for("main.dashboard"))
         flash("Hatalı Giriş")
     return render_template("login.html")

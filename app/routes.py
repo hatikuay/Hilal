@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from .models import User, Note, Role
 from .decorators import roles_required
 from . import db
+import html
 
 main = Blueprint("main", __name__)
 

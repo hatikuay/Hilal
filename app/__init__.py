@@ -26,6 +26,6 @@ def create_app():
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(main_blueprint)
     app.register_blueprint(insecure_blueprint)
-    app.register_blueprint(secure_blueprint)
+    app.register_blueprint(secure_blueprint, url_prefix='/secure')
 
     return app

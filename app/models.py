@@ -22,3 +22,4 @@ class Note(db.Model):
     title = db.Column(db.String(100))
     content = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    owner = db.relationship("User", backref="notes")

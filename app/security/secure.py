@@ -1,10 +1,11 @@
 import html
 import time
-from flask import Blueprint, flash, request, session, redirect, render_template
+from flask import Blueprint, flash, request, session, redirect, render_template, jsonify, abort, url_for
+from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash
-from app.models import User
+from app.models import User, Note, Role
 from app import db
-
+import html
 
 secure = Blueprint("secure", __name__)
 
@@ -62,13 +63,53 @@ def secure_brute_login():
     return render_template("secure_brute_login.html")
 
 
-@secure.route("/secure-notes", methods=["GET", "POST"])
-def insecure_notes():
-    notes = []
+@secure.route("/notes", methods=["GET", "POST"])
+@login_required
+def secure_notes():
     if request.method == "POST":
-        title = html.escape(request.form["title"])
+        # XSS korumalı
+        title   = html.escape(request.form["title"])
         content = html.escape(request.form["content"])
+        note = Note(title=title, content=content, owner=current_user)
+        db.session.add(note)
+        db.session.commit()
+        flash("Not eklendi!")
 
-        notes.append({"title": title, "content": content})
+    notes = Note.query.filter_by(user_id=current_user.id).all()
+    return render_template("secure_notes.html", notes=notes)
 
-    return render_template("insecure_notes.html", notes=notes)
+@secure.route("/notes/delete/<int:note_id>", methods=["POST"])
+@login_required
+def delete_note(note_id):
+    note = Note.query.get_or_404(note_id)
+    if note.owner != current_user:
+        abort(403)
+    db.session.delete(note)
+    db.session.commit()
+    return jsonify({"success": True, "note_id": note_id})
+
+@secure.route("/notes/edit/<int:note_id>", methods=["GET"])
+@login_required
+def edit_note_form(note_id):
+    note = Note.query.get_or_404(note_id)
+    if note.owner != current_user:
+        abort(403)
+    return render_template("edit_note.html", note=note)
+
+@secure.route("/notes/edit/<int:note_id>", methods=["POST"])
+@login_required
+def edit_note_submit(note_id):
+    note = Note.query.get_or_404(note_id)
+    if note.owner != current_user:
+        abort(403)
+
+    # XSS korumalı güncelleme
+    note.title   = html.escape(request.form["title"])
+    note.content = html.escape(request.form["content"])
+    db.session.commit()
+    flash("Not güncellendi!")
+    return redirect(url_for("secure.secure_notes"))
+
+
+
+

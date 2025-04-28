@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Notu Düzenle</h3>
+
+<form method="post" action="{{ url_for('secure.edit_note_submit', note_id=note.id) }}">
+  {{ csrf_token() }}
+  <input name="title" value="{{ note.title }}" required>
+  <textarea name="content" required>{{ note.content }}</textarea>
+  <button type="submit">Güncelle</button>
+  <a href="{{ url_for('secure.secure_notes') }}">[İptal]</a>
+</form>
+
+{% endblock %}

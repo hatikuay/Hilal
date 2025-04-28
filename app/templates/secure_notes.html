@@ -1,13 +1,53 @@
-<h3>Güvenli Not Ekleme</h3>
-<form method="post">
-    <input name="title" placeholder="Not Başlığı">
-    <textarea name="content" placeholder="İçerik yazın..."></textarea>
-    <button>Kaydet</button>
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Notlarım</h3>
+
+<!-- Not Ekleme Formu -->
+<form method="post" action="{{ url_for('secure.secure_notes') }}">
+  {{ csrf_token() }}
+  <input name="title" placeholder="Başlık" required>
+  <textarea name="content" placeholder="İçerik" required></textarea>
+  <button type="submit">Kaydet</button>
 </form>
-<ul>
-    {% for note in notes %}
 
-    <li><strong>{{note.title}}</strong>:{{note.content}} </li>
+<hr>
 
-    {% endfor %}
+<ul id="notes-list">
+  {% for note in notes %}
+    <li id="note-{{ note.id }}">
+      <strong>{{ note.title }}</strong>: {{ note.content }}
+      <a href="{{ url_for('secure.edit_note_form', note_id=note.id) }}">[Düzenle]</a>
+      <button onclick="deleteNote({{ note.id }})">[Sil]</button>
+    </li>
+  {% endfor %}
 </ul>
+
+<script>
+// CSRF token’ı <meta> olarak da koyabilirsiniz; burada doğrudan inject ediyoruz.
+const csrfToken = "{{ csrf_token() }}";
+
+function deleteNote(id) {
+  if (!confirm("Bu notu silmek istediğinize emin misiniz?")) return;
+
+  fetch(`{{ url_for('secure.delete_note', note_id=0) }}`.replace("/0", `/` + id), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    credentials: 'same-origin'
+  })
+  .then(resp => resp.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`note-${id}`).remove();
+    } else {
+      alert("Silme işleminde hata oldu.");
+    }
+  })
+  .catch(err => console.error(err));
+}
+</script>
+
+{% endblock %}
