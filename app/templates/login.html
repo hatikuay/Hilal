@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block title %}Giriş Yap{% endblock %} {% block
+content %}
+<h3 class="mb-4">Giriş Yap</h3>
+<form
+  method="post"
+  action="{{ url_for('auth.login', next=request.args.get('next', '')) }}"
+>
+  <!-- CSRF koruması -->
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+  <!-- next parametresi (login_required yönlendirmeleri için) -->
+  <input type="hidden" name="next" value="{{ request.args.get('next', '') }}" />
+
+  <div class="mb-3">
+    <label for="username" class="form-label">Kullanıcı Adı</label>
+    <input
+      type="text"
+      class="form-control"
+      id="username"
+      name="username"
+      required
+      value="{{ request.form.username or '' }}"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="password" class="form-label">Şifre</label>
+    <input
+      type="password"
+      class="form-control"
+      id="password"
+      name="password"
+      required
+    />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Giriş Yap</button>
+
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, msg in messages %}
+  <div class="alert alert-{{ category }} mt-3">{{ msg }}</div>
+  {% endfor %} {% endif %} {% endwith %}
+</form>
+
+<p class="mt-3">
+  Hesabınız yok mu?
+  <a href="{{ url_for('auth.register') }}">Kayıt Olun</a>
+</p>
+{% endblock %}

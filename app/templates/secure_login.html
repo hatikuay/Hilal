@@ -3,7 +3,7 @@
 {% block content %}
   <h3 class="mb-4">Güvenli Giriş</h3>
   <form method="post" action="{{ url_for('secure.secure_login') }}">
-    {{ csrf_token() }}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="mb-3">
       <label for="username" class="form-label">Kullanıcı Adı</label>
       <input type="text" id="username" name="username" class="form-control" required>

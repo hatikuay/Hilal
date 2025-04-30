@@ -10,7 +10,7 @@ import html
 secure = Blueprint("secure", __name__)
 
 
-@secure.route("/insecure-login", methods=["GET", "POST"])
+@secure.route("/login", methods=["GET", "POST"])
 def secure_login():
     message = ""
     if request.method == "POST":
@@ -20,17 +20,17 @@ def secure_login():
 
         if user and check_password_hash(user.password, password):
             session["user"] = user.username
-            return redirect("/dashboard")
+            return redirect(url_for('secure.secure_notes'))
         else:
             flash("Giriş başarısız!")
 
-    return render_template("insecure_login.html", message=message)
+    return render_template("secure_login.html", message=message)
 
 
 failed_attempts = {}
 
 
-@secure.route("/secure-brute-login", methods=["GET", "POST"])
+@secure.route("/login/brute", methods=["GET", "POST"])
 def secure_brute_login():
 
     ip = request.remote_addr
@@ -52,7 +52,7 @@ def secure_brute_login():
         if user and check_password_hash(user.password, password):
             session["user"] = user.username
             failed_attempts.pop(ip, None)
-            return redirect("/dashboard")
+            return redirect(url_for('secure.secure_notes'))
         else:
             if ip not in failed_attempts:
                 failed_attempts[ip] = (1, now)
@@ -88,27 +88,20 @@ def delete_note(note_id):
     db.session.commit()
     return jsonify({"success": True, "note_id": note_id})
 
-@secure.route("/notes/edit/<int:note_id>", methods=["GET"])
-@login_required
-def edit_note_form(note_id):
-    note = Note.query.get_or_404(note_id)
-    if note.owner != current_user:
-        abort(403)
-    return render_template("edit_note.html", note=note)
-
 @secure.route("/notes/edit/<int:note_id>", methods=["POST"])
 @login_required
 def edit_note_submit(note_id):
     note = Note.query.get_or_404(note_id)
     if note.owner != current_user:
         abort(403)
-
-    # XSS korumalı güncelleme
-    note.title   = html.escape(request.form["title"])
-    note.content = html.escape(request.form["content"])
-    db.session.commit()
-    flash("Not güncellendi!")
-    return redirect(url_for("secure.secure_notes"))
+    if request.method == 'POST':
+        # XSS korumalı güncelleme
+        note.title   = html.escape(request.form["title"])
+        note.content = html.escape(request.form["content"])
+        db.session.commit()
+        flash("Not güncellendi!")
+        return redirect(url_for("secure.secure_notes"))
+    return render_template('edit_note.html', note=note)
 
 
 

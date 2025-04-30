@@ -14,11 +14,11 @@ class Config:
     SESSION_COOKIE_HTTPONLY = True # JavaScript’in document.cookie ile erişimi engelle
     SESSION_COOKIE_SAMESITE = "Lax" # CSRF riskini azaltmak için
     
-    REMEMBER_COOKIE_SECURE = True 
-    REMEMBER_COOKIE_HTTPONLY = True 
+    SESSION_COOKIE_SECURE   = os.environ.get("FLASK_ENV") == "production"
+    REMEMBER_COOKIE_SECURE  = os.environ.get("FLASK_ENV") == "production" 
     REMEMBER_COOKIE_SAMESITE = "Lax"
     
     # === Oturum Süresi ===
     # session.permanent=True yapıldığında geçerli olacak maksimum süre
-    PERMANENT_SESSION_LIFETIME = timedelta(miutes=30)
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=30)
 

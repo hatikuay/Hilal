@@ -1,11 +1,11 @@
-from flask import Blueprint, request, session, redirect, render_template
+from flask import Blueprint, request, session, redirect, render_template, url_for
 from app import db
 
 
 insecure = Blueprint("insecure", __name__)
 
 
-@insecure.route("/insecure-login", methods=["GET", "POST"])
+@insecure.route("/login", methods=["GET", "POST"])
 def insecure_login():
     message = ""
     if request.method == "POST":
@@ -17,7 +17,7 @@ def insecure_login():
 
         if result:
             session["user"] = result.username if "username" in result else "admin"
-            return redirect("/dashboard")
+            return redirect(url_for('main.dashboard'))
         else:
             message = "Hatalı giriş"
 
@@ -35,14 +35,14 @@ def brute_login():
 
         if result:
             session["user"] = result.username if "username" in result else "admin"
-            return redirect("/dashboard")
+            return redirect(url_for('main.dashboard'))
         else:
             message = "Hatalı giriş"
 
     return render_template("insecure_login.html", message=message)
 
 
-@insecure.route("/insecure-notes", methods=["GET", "POST"])
+@insecure.route("/notes", methods=["GET", "POST"])
 def insecure_notes():
     notes = []
     if request.method == "POST":
