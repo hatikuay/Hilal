@@ -2,6 +2,7 @@ import html
 import time
 from flask import Blueprint, flash, request, session, redirect, render_template, jsonify, abort, url_for
 from flask_login import login_required, current_user
+from flask_login import login_user, logout_user, login_required
 from werkzeug.security import check_password_hash
 from app.models import User, Note, Role
 from app import db
@@ -19,7 +20,8 @@ def secure_login():
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
-            session["user"] = user.username
+            login_user(user)
+            session.permanent = True
             return redirect(url_for('secure.secure_notes'))
         else:
             flash("Giriş başarısız!")
@@ -50,7 +52,8 @@ def secure_brute_login():
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
-            session["user"] = user.username
+            login_user(user)
+            session.permanent = True
             failed_attempts.pop(ip, None)
             return redirect(url_for('secure.secure_notes'))
         else:
@@ -88,12 +91,14 @@ def delete_note(note_id):
     db.session.commit()
     return jsonify({"success": True, "note_id": note_id})
 
-@secure.route("/notes/edit/<int:note_id>", methods=["POST"])
+@secure.route("/notes/edit/<int:note_id>", methods=["GET", "POST"])
 @login_required
-def edit_note_submit(note_id):
+def edit_note(note_id):
     note = Note.query.get_or_404(note_id)
     if note.owner != current_user:
         abort(403)
+    if request.method == 'GET':
+        return render_template('edit_note.html', note=note)
     if request.method == 'POST':
         # XSS korumalı güncelleme
         note.title   = html.escape(request.form["title"])
@@ -101,7 +106,7 @@ def edit_note_submit(note_id):
         db.session.commit()
         flash("Not güncellendi!")
         return redirect(url_for("secure.secure_notes"))
-    return render_template('edit_note.html', note=note)
+
 
 
 

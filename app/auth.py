@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, redirect, request, flash, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
-from .models import User
+from .models import User, Role
 from . import db, login_manager
 
 auth = Blueprint('auth', __name__)
@@ -32,11 +32,13 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = generate_password_hash(request.form['password'])
-        new_user = User(username=username, password=password)
+        role     = request.form['role']        
+        new_user = User(username=username, password=password, role=role)
+        
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('auth.login'))
-    return render_template('register.html')
+    return render_template('register.html', Role=Role)
 
 
 @auth.route('/logout')

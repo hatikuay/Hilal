@@ -1,53 +1,91 @@
 {% extends "base.html" %}
+{% block title %}Notlarım{% endblock %}
+
 {% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-primary">Notlarım</h2>
 
-<h3>Notlarım</h3>
+  <!-- Not Ekleme Kartı -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Yeni Not Oluştur</h5>
+      <form method="post" action="{{ url_for('secure.secure_notes') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-3">
+          <label for="title" class="form-label">Başlık</label>
+          <input id="title" name="title" class="form-control" placeholder="Örneğin: Toplantı Notları" required>
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">İçerik</label>
+          <textarea id="content" name="content" class="form-control" rows="4" placeholder="Notunuzu buraya yazın..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-save-fill"></i> Kaydet
+        </button>
+      </form>
+    </div>
+  </div>
 
-<!-- Not Ekleme Formu -->
-<form method="post" action="{{ url_for('secure.secure_notes') }}">
-  {{ csrf_token() }}
-  <input name="title" placeholder="Başlık" required>
-  <textarea name="content" placeholder="İçerik" required></textarea>
-  <button type="submit">Kaydet</button>
-</form>
+  <!-- Notlar Listesi -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-secondary text-white">
+      <i class="bi bi-journal-text"></i> Kayıtlı Notlar
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for note in notes %}
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">{{ note.title }}</div>
+          {{ note.content }}
+        </div>
+        <div class="btn-group btn-group-sm">
+          <a href="{{ url_for('secure.edit_note', note_id=note.id) }}"
+             class="btn btn-outline-primary" title="Düzenle">
+            <i class="bi bi-pencil-square"></i>
+          </a>
+          <button onclick="deleteNote({{ note.id }})"
+                  class="btn btn-outline-danger" title="Sil">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+        </div>
+      </li>
+      {% else %}
+      <li class="list-group-item text-center text-muted">
+        Henüz hiç not yok. Hemen bir tane ekleyin!
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
 
-<hr>
-
-<ul id="notes-list">
-  {% for note in notes %}
-    <li id="note-{{ note.id }}">
-      <strong>{{ note.title }}</strong>: {{ note.content }}
-      <a href="{{ url_for('secure.edit_note_form', note_id=note.id) }}">[Düzenle]</a>
-      <button onclick="deleteNote({{ note.id }})">[Sil]</button>
-    </li>
-  {% endfor %}
-</ul>
-
+<!-- AJAX Silme Script -->
 <script>
-// CSRF token’ı <meta> olarak da koyabilirsiniz; burada doğrudan inject ediyoruz.
-const csrfToken = "{{ csrf_token() }}";
+  const csrfToken = "{{ csrf_token() }}";
 
-function deleteNote(id) {
-  if (!confirm("Bu notu silmek istediğinize emin misiniz?")) return;
-
-  fetch(`{{ url_for('secure.delete_note', note_id=0) }}`.replace("/0", `/` + id), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrfToken
-    },
-    credentials: 'same-origin'
-  })
-  .then(resp => resp.json())
-  .then(data => {
-    if (data.success) {
-      document.getElementById(`note-${id}`).remove();
-    } else {
-      alert("Silme işleminde hata oldu.");
+  async function deleteNote(id) {
+    if (!confirm("Bu notu silmek istediğinize emin misiniz?")) return;
+    try {
+      const resp = await fetch(
+        `{{ url_for('secure.delete_note', note_id=0) }}`.replace("/0", `/${id}`),
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          credentials: 'same-origin'
+        }
+      );
+      const data = await resp.json();
+      if (data.success) {
+        document.getElementById(`note-${id}`).remove();
+      } else {
+        alert("Silme işleminde hata oldu.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Sunucu hatası oluştu.");
     }
-  })
-  .catch(err => console.error(err));
-}
+  }
 </script>
-
 {% endblock %}

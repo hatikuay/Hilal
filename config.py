@@ -21,4 +21,6 @@ class Config:
     # === Oturum Süresi ===
     # session.permanent=True yapıldığında geçerli olacak maksimum süre
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=30)
+    # optionally refresh the session timer on each request:
+    SESSION_REFRESH_EACH_REQUEST = True
 

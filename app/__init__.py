@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
 from config import Config
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -35,5 +36,6 @@ def create_app():
     app.register_blueprint(main_bp)
     app.register_blueprint(insecure_bp, url_prefix='/insecure')
     app.register_blueprint(secure_bp, url_prefix='/secure')
-
+    
+    migrate = Migrate(app, db)
     return app

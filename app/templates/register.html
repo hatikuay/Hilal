@@ -12,6 +12,16 @@
       <label for="password" class="form-label">Şifre</label>
       <input type="password" id="password" name="password" class="form-control" required>
     </div>
+
+    <!-- Yeni rol seçimi alanı -->
+    <div class="mb-3">
+      <label for="role" class="form-label">Rol</label>
+      <select id="role" name="role" class="form-select" required>
+        <option value="{{ Role.USER }}">Kullanıcı</option>
+        <option value="{{ Role.EDITOR }}">Düzenleyici</option>
+      </select>
+    </div>
+
     <button type="submit" class="btn btn-success">Kayıt Ol</button>
   </form>
   <p class="mt-3">

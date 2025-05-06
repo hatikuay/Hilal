@@ -8,7 +8,7 @@ class Role:
     GUEST = "guest"
     USER = "user"
     ADMIN = "admin"
-
+    EDITOR = "editor"
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
