@@ -2,7 +2,7 @@
 set -e
 
 # 1) Veritabanına migration’ları uygula
-#lask db upgrade
+flask db upgrade
 
 # 2) Başlangıç seed’ini çalıştır
 python - << 'EOF'

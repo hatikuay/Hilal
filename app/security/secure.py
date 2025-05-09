@@ -24,7 +24,7 @@ def secure_login():
             session.permanent = True
             return redirect(url_for('secure.secure_notes'))
         else:
-            flash("Giriş başarısız!")
+            flash("Geçersiz kullanıcı adı veya şifre.", "danger")
 
     return render_template("secure_login.html", message=message)
 
@@ -61,7 +61,7 @@ def secure_brute_login():
                 failed_attempts[ip] = (1, now)
             else:
                 failed_attempts[ip] = (failed_attempts[ip][0] + 1, now)
-            flash("Giriş başarısız!")
+            flash("Geçersiz kullanıcı adı veya şifre.", "danger")
 
     return render_template("secure_brute_login.html")
 

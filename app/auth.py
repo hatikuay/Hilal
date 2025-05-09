@@ -28,11 +28,8 @@ def login():
             flash('Başarıyla giriş yaptınız.', 'success')
             next_page = request.args.get('next')
             return redirect(next_page or url_for('main.dashboard'))
-        # Hatalı kullanıcı/şifre
-        if not user:
-            flash('Kullanıcı adı hatalı.', 'danger')
-        else:
-            flash('Şifre hatalı.', 'danger')
+        # Hatalı kullanıcı/şifre — artık tek, generic mesaj
+        flash('Geçersiz kullanıcı adı veya şifre.', 'danger')
     # GET isteği veya form validasyon hataları
     return render_template('login.html', form=form)
 

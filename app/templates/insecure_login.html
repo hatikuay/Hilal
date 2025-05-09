@@ -1,17 +1,25 @@
 {% extends "base.html" %}
 {% block title %}Zafiyetli Giriş{% endblock %}
 {% block content %}
-  <h3 class="mb-4">Zafiyetli Giriş (SQL Injection Test)</h3>
-  <form method="post" action="{{ url_for('insecure.insecure_login') }}">
-    <div class="mb-3">
-      <input type="text" name="username" class="form-control" placeholder="Kullanıcı Adı">
-    </div>
-    <div class="mb-3">
-      <input type="password" name="password" class="form-control" placeholder="Şifre">
-    </div>
-    <button type="submit" class="btn btn-danger">Giriş Yap</button>
-  </form>
-  {% if message %}
-    <div class="alert alert-danger mt-3">{{ message }}</div>
+<h3 class="mb-4">Zafiyetli Giriş (SQL Injection Test)</h3>
+<form method="post" action="{{ url_for('insecure.insecure_login') }}">
+  <div class="mb-3">
+    <input type="text" name="username" class="form-control" placeholder="Kullanıcı Adı">
+  </div>
+  <div class="mb-3">
+    <input type="password" name="password" class="form-control" placeholder="Şifre">
+  </div>
+  <button type="submit" class="btn btn-danger">Giriş Yap</button>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, msg in messages %}
+  <div class="alert alert-{{ category }}">{{ msg }}</div>
+  {% endfor %}
   {% endif %}
+  {% endwith %}
+
+</form>
+{% if message %}
+<div class="alert alert-danger mt-3">{{ message }}</div>
+{% endif %}
 {% endblock %}
