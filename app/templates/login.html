@@ -1,40 +1,33 @@
 {% extends "base.html" %} {% block title %}Giriş Yap{% endblock %} {% block
 content %}
 <h3 class="mb-4">Giriş Yap</h3>
-<form
-  method="post"
-  action="{{ url_for('auth.login', next=request.args.get('next', '')) }}"
->
-  <!-- CSRF koruması -->
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-  <!-- next parametresi (login_required yönlendirmeleri için) -->
-  <input type="hidden" name="next" value="{{ request.args.get('next', '') }}" />
+<form method="post">
+  {{ form.hidden_tag() }}
 
   <div class="mb-3">
-    <label for="username" class="form-label">Kullanıcı Adı</label>
-    <input
-      type="text"
-      class="form-control"
-      id="username"
-      name="username"
-      required
-      value="{{ request.form.username or '' }}"
-    />
+    {{ form.username.label(class="form-label") }} {{
+    form.username(class="form-control", placeholder="Kullanıcı adınızı girin")
+    }} {% for err in form.username.errors %}
+    <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
   </div>
 
   <div class="mb-3">
-    <label for="password" class="form-label">Şifre</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password"
-      name="password"
-      required
-    />
+    {{ form.password.label(class="form-label") }} {{
+    form.password(class="form-control", placeholder="Şifrenizi girin") }} {% for
+    err in form.password.errors %}
+    <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
   </div>
 
-  <button type="submit" class="btn btn-primary">Giriş Yap</button>
+  <div class="form-check mb-3">
+    {{ form.remember(class="form-check-input") }} {{
+    form.remember.label(class="form-check-label") }}
+  </div>
 
+  {{ form.submit(class="btn btn-primary") }}
+
+  <!-- Flash mesajları -->
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
   messages %} {% for category, msg in messages %}
   <div class="alert alert-{{ category }} mt-3">{{ msg }}</div>

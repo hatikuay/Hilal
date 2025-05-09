@@ -4,6 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
 from .models import User, Role
 from . import db, login_manager
+from .forms import LoginForm, RegistrationForm
+from sqlalchemy.exc import IntegrityError
 
 auth = Blueprint('auth', __name__)
 
@@ -15,34 +17,51 @@ def load_user(user_id):
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            session.permanent = True
-            return redirect(request.args.get('next') or url_for('main.dashboard'))
-        flash('Hatalı giriş bilgisi', 'danger')
-    return render_template('login.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        # 1) Kullanıcıyı bul
+        user = User.query.filter_by(username=form.username.data).first()
+        # 2) Şifreyi doğrula
+        if user and check_password_hash(user.password, form.password.data):
+            # 3) Oturumu aç ve "remember" opsiyonunu geçir
+            login_user(user, remember=form.remember.data)
+            flash('Başarıyla giriş yaptınız.', 'success')
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('main.dashboard'))
+        # Hatalı kullanıcı/şifre
+        if not user:
+            flash('Kullanıcı adı hatalı.', 'danger')
+        else:
+            flash('Şifre hatalı.', 'danger')
+    # GET isteği veya form validasyon hataları
+    return render_template('login.html', form=form)
 
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = generate_password_hash(request.form['password'])
-        role     = request.form['role']        
-        new_user = User(username=username, password=password, role=role)
-        
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        new_user = User(
+            username=form.username.data,
+            password=generate_password_hash(
+                form.password.data, method='scrypt'),
+            role=form.role.data
+        )
         db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('auth.login'))
-    return render_template('register.html', Role=Role)
+        try:
+            db.session.commit()
+            flash('Kayıt başarıyla tamamlandı. Giriş yapabilirsiniz.', 'success')
+            return redirect(url_for('auth.login'))
+        except IntegrityError:
+            db.session.rollback()
+            flash(
+                'Bu e-posta zaten kullanımda. Lütfen başka bir e-posta deneyin.', 'danger')
+    return render_template('register.html', form=form)
 
 
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
+    flash('Başarıyla çıkış yaptınız.', 'info')
     return redirect(url_for('auth.login'))

@@ -3,17 +3,21 @@ from flask import Blueprint, render_template, redirect, request, url_for
 from flask_login import login_required, current_user
 from .models import Note, User
 from . import db
+from .decorators import roles_required
 
 main = Blueprint('main', __name__)
 
 
 @main.route('/')
 def home():
-    return redirect(url_for('main.dashboard'))
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
+    return redirect(url_for('auth.login'))
 
 
 @main.route('/dashboard', methods=['GET', 'POST'])
 @login_required
+@roles_required('user', 'admin', 'editor')
 def dashboard():
     if request.method == 'POST':
         title = request.form['title']
