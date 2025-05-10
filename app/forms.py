@@ -21,14 +21,9 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField(
-        "E-posta",
-        validators=[DataRequired("E-posta boş olamaz"), Length(min=6, max=150)],
-    )
+    username = StringField("Kullanıcı Adı",validators=[DataRequired("E-posta boş olamaz"), Length(min=6, max=150)],)
     email = StringField('Email', validators=[DataRequired(), Email()])
-
-    password = PasswordField(
-        "Şifre", validators=[DataRequired("Şifre boş olamaz"), Length(min=6)]
+    password = PasswordField("Şifre", validators=[DataRequired("Şifre boş olamaz"), Length(min=6)]
     )
     confirm = PasswordField(
         "Şifre (Tekrar)",

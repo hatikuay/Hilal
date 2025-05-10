@@ -32,9 +32,3 @@ def dashboard():
 
 from .decorators import roles_required
 
-@main.route('/admin')
-@login_required
-@roles_required('admin')
-def admin_panel():
-    users = User.query.all()
-    return render_template('admin_panel.html', users=users)

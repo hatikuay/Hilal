@@ -9,6 +9,9 @@
   <div class="mb-3">
     {{ form.username.label(class="form-label") }}
     {{ form.username(class="form-control") }}
+    {% for err in form.username.errors %}
+    <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
   </div>
   <div class="mb-3">
     {{ form.email.label(class="form-label") }}
@@ -19,8 +22,15 @@
     {{ form.password(class="form-control") }}
   </div>
   <div class="mb-3">
-    {{ form.password2.label(class="form-label") }}
-    {{ form.password2(class="form-control") }}
+    {{ form.confirm.label(class="form-label") }}
+    {{ form.confirm(class="form-control") }}
+  </div>
+  <!-- Rol Seçimi -->
+  <div class="mb-3">
+    {{ form.role.label(class="form-label") }} {{ form.role(class="form-select")
+    }} {% for err in form.role.errors %}
+    <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
   </div>
   <button type="submit" class="btn btn-primary">Oluştur</button>
 </form>

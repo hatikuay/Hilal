@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user, login_required
 from app.models import User, Role, db
 from app.forms import RegistrationForm
@@ -38,13 +39,14 @@ def user_list():
 def create_user():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(
+        new_user = User(
             username=form.username.data,
             email=form.email.data,
-            password_hash=form.password.data,  # Şifre hashleme eklenecek
-            role=Role.USER,
+            password=generate_password_hash(
+                form.password.data, method='scrypt'),
+            role=form.role.data
         )
-        db.session.add(user)
+        db.session.add(new_user)
         db.session.commit()
         flash("Kullanıcı başarıyla oluşturuldu.", "success")
         return redirect(url_for("admin.user_list"))

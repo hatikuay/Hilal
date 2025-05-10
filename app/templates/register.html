@@ -3,11 +3,20 @@ content %}
 <h3 class="mb-4">Yeni Hesap Oluştur</h3>
 <form method="post">
   {{ form.hidden_tag() }}
+  <!-- Kullanıcı Adı -->
+  <div class="mb-3">
+    {{ form.username.label(class="form-label") }} 
+    {{ form.username(class="form-control") }} 
+    {% for err in form.username.errors %}
+      <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
+  </div>
   <!-- E-posta -->
   <div class="mb-3">
-    {{ form.username.label(class="form-label") }} {{
-    form.username(class="form-control") }} {% for err in form.username.errors %}
-    <div class="text-danger small">{{ err }}</div>
+    {{ form.email.label(class="form-label") }}
+    {{ form.email(class="form-control") }}
+    {% for err in form.email.errors %}
+      <div class="text-danger small">{{ err }}</div>
     {% endfor %}
   </div>
   <!-- Şifre -->

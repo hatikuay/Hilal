@@ -40,6 +40,7 @@ def register():
     if form.validate_on_submit():
         new_user = User(
             username=form.username.data,
+            email=form.email.data,
             password=generate_password_hash(
                 form.password.data, method='scrypt'),
             role=form.role.data

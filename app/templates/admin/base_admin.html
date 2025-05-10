@@ -18,9 +18,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Siteye Dön</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.user_list') }}">Kullanıcılar</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.settings') }}">Ayarlar</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}">Siteye Dön</a></li>
           <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">Çıkış</a></li>
         </ul>
       </div>
@@ -31,6 +29,7 @@
       <div class="list-group list-group-flush">
         <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action">Genel Bakış</a>
         <a href="{{ url_for('admin.user_list') }}" class="list-group-item list-group-item-action">Kullanıcılar</a>
+        <a href="{{ url_for('admin.create_user') }}" class="list-group-item list-group-item-action">Kullanıcı Oluştur</a>
         <a href="{{ url_for('admin.settings') }}" class="list-group-item list-group-item-action">Ayarlar</a>
       </div>
     </div>

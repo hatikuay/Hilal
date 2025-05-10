@@ -17,13 +17,13 @@
       <td>{{ user.role }}</td>
       <td>
         <form method="post" action="{{ url_for('admin.toggle_admin', user_id=user.id) }}" style="display:inline;">
-          {{ csrf_token() }}
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button class="btn btn-sm btn-outline-primary">
             {{ 'Adminten Çıkar' if user.role=='admin' else 'Yönetici Yap' }}
           </button>
         </form>
         <form method="post" action="{{ url_for('admin.delete_user', user_id=user.id) }}" style="display:inline; margin-left:4px;">
-          {{ csrf_token() }}
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button class="btn btn-sm btn-outline-danger">Sil</button>
         </form>
       </td>

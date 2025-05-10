@@ -16,6 +16,7 @@ with app.app_context():
     if not User.query.filter_by(username='hilal').first():
         admin = User(
             username='hilal',
+            email='hilal@gmail.com',
             password=generate_password_hash('123456789', method='scrypt'),
             role=Role.ADMIN
         )
