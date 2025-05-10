@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+  <h3 class="mb-4">Dashboard</h3>
+  <p>
+    Hoşgeldiniz, {{ current_user.username }}!<br>
+    Not yönetimi için <a href="{{ url_for('secure.secure_notes') }}">Notlarım</a> sayfasına gidin.
+  </p>
+{% endblock %}

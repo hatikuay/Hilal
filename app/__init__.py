@@ -50,10 +50,12 @@ def create_app():
     from app.routes import main as main_bp
     from app.security.insecure import insecure as insecure_bp
     from app.security.secure import secure as secure_bp
+    from app.admin.admin import admin_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(insecure_bp, url_prefix='/insecure')
     app.register_blueprint(secure_bp, url_prefix='/secure')
+    app.register_blueprint(admin_bp, url_prefix='/admin')
     
     return app

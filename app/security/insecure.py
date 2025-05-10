@@ -58,7 +58,7 @@ def brute_login():
         else:
             message = "Geçersiz kullanıcı adı veya şifre."
 
-    return render_template("insecure_login.html", message=message)
+    return render_template("insecure_brute_login.html", message=message)
 
 # Güvenlik kontrolü eklenmiş notlar sayfası
 @insecure.route("/notes", methods=["GET", "POST"])

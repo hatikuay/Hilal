@@ -1,25 +1,48 @@
+<!-- File: app/templates/insecure_login.html -->
 {% extends "base.html" %}
-{% block title %}Zafiyetli Giriş{% endblock %}
-{% block content %}
-<h3 class="mb-4">Zafiyetli Giriş (SQL Injection Test)</h3>
-<form method="post" action="{{ url_for('insecure.insecure_login') }}">
-  <div class="mb-3">
-    <input type="text" name="username" class="form-control" placeholder="Kullanıcı Adı">
-  </div>
-  <div class="mb-3">
-    <input type="password" name="password" class="form-control" placeholder="Şifre">
-  </div>
-  <button type="submit" class="btn btn-danger">Giriş Yap</button>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for category, msg in messages %}
-  <div class="alert alert-{{ category }}">{{ msg }}</div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
 
-</form>
-{% if message %}
-<div class="alert alert-danger mt-3">{{ message }}</div>
-{% endif %}
+{% block title %}Zafiyetli Giriş{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+  <h3 class="mb-4">Zafiyetli Giriş (SQL Injection Test)</h3>
+
+  {# Hata mesajı varsa göster #}
+  {% if message %}
+    <div class="alert alert-danger">{{ message }}</div>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('insecure.insecure_login') }}">
+    <div class="form-group mb-3">
+      <label for="username">Kullanıcı Adı</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        class="form-control"
+        placeholder="Kullanıcı adınızı girin"
+        required
+      >
+    </div>
+
+    <div class="form-group mb-4">
+      <label for="password">Şifre</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="form-control"
+        placeholder="Şifrenizi girin"
+        required
+      >
+    </div>
+
+    <button type="submit" class="btn btn-danger w-100">Giriş Yap</button>
+  </form>
+
+  <p class="mt-3 text-center">
+    <a href="{{ url_for('main.home') }}">Giriş Seçenekleri Menüsüne Dön</a>
+  </p>
+</div>
 {% endblock %}
+

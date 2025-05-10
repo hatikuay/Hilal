@@ -1,9 +1,36 @@
+<!-- File: app/templates/index.html -->
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+
+{% block title %}Hoş Geldiniz{% endblock %}
+
 {% block content %}
-  <h3 class="mb-4">Dashboard</h3>
-  <p>
-    Hoşgeldiniz, {{ current_user.username }}!<br>
-    Not yönetimi için <a href="{{ url_for('secure.secure_notes') }}">Notlarım</a> sayfasına gidin.
-  </p>
+  <h1 class="mt-5">Test Login Yöntemleri</h1>
+  <p>Lütfen aşağıdaki yöntemlerden biriyle giriş yapın:</p>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <a href="{{ url_for('auth.login', next=request.path) }}">
+        Normal Auth Login
+      </a>
+    </li>
+    <li class="list-group-item">
+      <a href="{{ url_for('secure.secure_login', next=request.path) }}">
+        Secure Login
+      </a>
+    </li>
+    <li class="list-group-item">
+      <a href="{{ url_for('secure.secure_brute_login', next=request.path) }}">
+        Secure Brute-Force Login
+      </a>
+    </li>
+    <li class="list-group-item">
+      <a href="{{ url_for('insecure.insecure_login', next=request.path) }}">
+        Insecure (SQL-Injection) Login
+      </a>
+    </li>
+    <li class="list-group-item">
+      <a href="{{ url_for('insecure.brute_login', next=request.path) }}">
+        Insecure Brute-Force Login
+      </a>
+    </li>
+  </ul>
 {% endblock %}

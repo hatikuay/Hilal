@@ -1,0 +1,14 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Ayarlar{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Ayarlar</h1>
+<form method="post">
+  <div class="mb-3">
+    <label for="site_name" class="form-label">Site Adı</label>
+    <input type="text" id="site_name" name="site_name" class="form-control" value="Hilal Uygulaması">
+  </div>
+  <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Kullanıcılar{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Kullanıcı Listesi</h1>
+<table class="table table-hover">
+  <thead>
+    <tr><th>ID</th><th>Kullanıcı Adı</th><th>E-posta</th><th>Rol</th><th>İşlem</th></tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.role }}</td>
+      <td>
+        <form method="post" action="{{ url_for('admin.toggle_admin', user_id=user.id) }}" style="display:inline;">
+          {{ csrf_token() }}
+          <button class="btn btn-sm btn-outline-primary">
+            {{ 'Adminten Çıkar' if user.role=='admin' else 'Yönetici Yap' }}
+          </button>
+        </form>
+        <form method="post" action="{{ url_for('admin.delete_user', user_id=user.id) }}" style="display:inline; margin-left:4px;">
+          {{ csrf_token() }}
+          <button class="btn btn-sm btn-outline-danger">Sil</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

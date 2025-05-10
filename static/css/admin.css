@@ -1,0 +1,13 @@
+/* File: static/css/admin.css */
+
+/* Sidebar için temel stil */
+#sidebar {
+    width: 200px;
+    min-height: 100vh;
+    padding-top: 1rem;
+}
+
+/* Ana içerik alanının sol kenar boşluğu */
+.container-fluid.p-4 {
+    margin-left: 200px;
+}

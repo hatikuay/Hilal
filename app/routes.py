@@ -10,9 +10,11 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def home():
+    # Eğer kullanıcı oturum açmışsa doğrudan notlar sayfasına
     if current_user.is_authenticated:
-        return redirect(url_for('main.dashboard'))
-    return redirect(url_for('auth.login'))
+        return redirect(url_for("main.dashboard"))
+    # Aksi halde test menüsünü göster
+    return render_template("index.html")
 
 
 @main.route('/dashboard', methods=['GET', 'POST'])
@@ -26,7 +28,7 @@ def dashboard():
         db.session.add(new_note)
         db.session.commit()
     notes = Note.query.filter_by(user_id=current_user.id).all()
-    return render_template('index.html', notes=notes)
+    return render_template('dashboard.html', notes=notes)
 
 from .decorators import roles_required
 

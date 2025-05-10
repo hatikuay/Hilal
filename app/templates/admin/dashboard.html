@@ -1,0 +1,25 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Genel Bakış{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Genel Bakış</h1>
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card text-white bg-primary">
+      <div class="card-body">
+        <h5 class="card-title">Kullanıcı Sayısı</h5>
+        <p class="card-text display-4">{{ user_count }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card text-white bg-success">
+      <div class="card-body">
+        <h5 class="card-title">Not Sayısı</h5>
+        <p class="card-text display-4">{{ note_count }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
