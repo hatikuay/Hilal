@@ -1,25 +1,18 @@
-#Temel Python imajı
-FROM python:3.11
+FROM python:3.11-slim
 
 WORKDIR /app
-
-COPY . . 
-
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "run.py"]
+# Uygulamanın tamamını kopyala (entrypoint.sh da dahil)
+COPY . .
 
-# Çalışma dizinine kopyalayalım
-COPY . /app
-WORKDIR /app
+# /app altındaki entrypoint.sh dosyasına çalıştırma izni ver
+RUN chmod +x ./entrypoint.sh
 
-# entrypoint betiğini kopyala ve çalıştırılabilir yap
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+ENV FLASK_APP=run.py \
+    FLASK_ENV=production
 
-# Flask ihtiyaçları
-RUN pip install -r requirements.txt
-
-# ENTRYPOINT ve CMD
-ENTRYPOINT ["entrypoint.sh"]
+# Dosyanın doğru konumundan çalıştır
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "run:app"]
